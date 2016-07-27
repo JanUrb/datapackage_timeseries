@@ -4,10 +4,11 @@ import datetime
 import os
 
 # import logging
-# TODO: Comments, make it callable from a notebook.
+# TODO: Comments, make it callable from a notebook, logging
 _TARGET_URL = r'http://www.energinet.dk/en/el/engrosmarked/udtraek-af-markedsdata/Sider/default.aspx'
 _REQUEST_URL = r'http://www.energinet.dk/_layouts/Markedsdata/Framework/Integrations/MarkedsdataExcelOutput.aspx'
 _FILE_NAME = 'danish.xls'
+
 
 def _extract_dotNet_variables():
     s = requests.Session()
@@ -31,7 +32,7 @@ def _construct_parameter(view_state, event_validation, file_path):
         current_time = datetime.datetime.now()
         current_date = current_time.strftime("%d-%m-%Y")
         print(current_date)
-        lines[-2] = 'endDate='+current_date
+        lines[-2] = 'endDate=' + current_date
         # split lines into dictionary
         for key_value in lines:
             try:
@@ -40,27 +41,28 @@ def _construct_parameter(view_state, event_validation, file_path):
             except:
                 print('Error: ' + key_value)
 
-
         # add view_state and event_validation
         parameter['__VIEWSTATE'] = view_state
-        parameter['__EVENTVALIDATION'] =  event_validation
+        parameter['__EVENTVALIDATION'] = event_validation
 
         return parameter
 
 
 def _download_excel(parameter, session, output_path):
-    post = session.post(_REQUEST_URL, data = parameter)
-    print(post.status_code)
+    post = session.post(_REQUEST_URL, data=parameter)
     # get excel
-    r = session.get(_REQUEST_URL, stream=True)
-    print()
+    header = {
+        'referer': r'http://www.energinet.dk/_layouts/Markedsdata/framework/integrations/markedsdatatemplate.aspx?language=en',
+        'content-type': 'application/vnd.ms-excel; charset=utf-8'
+    }
+    r = session.get(_REQUEST_URL, stream=True, headers=header)
+    print('_download_excel: get-request' + str(r.status_code))
+    print('headers:')
+    print(r.headers)
+
     with open(output_path, 'wb') as out_file:
         for chunck in r.iter_content(chunk_size=1024):
             out_file.write(chunck)
-
-
-
-
 
 
 if __name__ == '__main__':
