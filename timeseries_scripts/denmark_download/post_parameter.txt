@@ -471,5 +471,5 @@ MonthRepeater$ctl08$SelMonths=on
 MonthRepeater$ctl09$SelMonths=on
 MonthRepeater$ctl10$SelMonths=on
 MonthRepeater$ctl11$SelMonths=on
-endDate=27-07-2016
-startDate=1-7-2000
+startDate=1-1-2000
+endDate=01-08-2016
