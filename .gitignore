@@ -13,4 +13,3 @@ datapackage.json
 .ipynb_checkpoints/main-checkpoint.ipynb
 timeseries_scripts/__pycache__/
 *.pickle
-timeseries_scripts/danish.xls
