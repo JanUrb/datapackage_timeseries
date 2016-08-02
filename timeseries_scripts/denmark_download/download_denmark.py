@@ -15,7 +15,7 @@ log = logging.getLogger('download_denmark')
 log.setLevel(logging.INFO)
 
 
-_TARGET_URL = r'http://www.energinet.dk/en/el/engrosmarked/udtraek-af-markedsdata/Sider/default.aspx'
+_TARGET_URL = r'http://www.energinet.dk/en/el/engrosmarked/udtraek-af-markedsdata/Sider/default.aspx?language=en'
 _REQUEST_URL = r'http://www.energinet.dk/_layouts/Markedsdata/Framework/Integrations/MarkedsdataExcelOutput.aspx'
 _POST_PARAMETER_FILE = 'post_parameter.txt'
 
@@ -83,10 +83,13 @@ def _download_excel(parameter, session, output_path):
     header = {
         'referer': r'http://www.energinet.dk/_layouts/Markedsdata/framework/integrations/markedsdatatemplate.aspx?language=en',
         'content-type': 'application/vnd.ms-excel; charset=utf-8',
+        'accept-language': 'de,en-US;q=0.7,en;q=0.3',
         'accept-encoding': 'gzip, deflate',
-        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0',
+        'connection': 'keep-alive'
     }
+
     # Gets the data you want.
     r = session.get(_REQUEST_URL, stream=True, headers=header)
     with open(output_path, 'wb') as out_file:
