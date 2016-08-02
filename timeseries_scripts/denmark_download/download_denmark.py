@@ -85,14 +85,16 @@ def _download_excel(parameter, session, output_path):
         'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0',
         'connection': 'keep-alive'
     }
+
     # Specifies the data you want.
     p = session.post(_REQUEST_URL, data=parameter, headers=header)
-
-    log.debug('post header: ' + str(p.headers))
+    log.debug('Post request headers: '+ str(p.request.headers))
+    log.debug('post response headers: ' + str(p.headers))
 
     # Gets the data you want.
     r = session.get(_REQUEST_URL, stream=True, headers=header)
-    log.debug('header: ' + str(r.headers))
+    log.debug('get request headers: ' + str(session.headers))
+    log.debug('get header response: ' + str(r.headers))
     with open(output_path, 'wb') as out_file:
         for chunk in r.iter_content(chunk_size=1024):
             out_file.write(chunk)
