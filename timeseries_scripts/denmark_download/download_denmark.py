@@ -93,8 +93,8 @@ def _download_excel(parameter, session, output_path):
 
     # Gets the data you want.
     r = session.get(_REQUEST_URL, stream=True, headers=header)
-    log.debug('get request headers: ' + str(session.headers))
-    log.debug('get header response: ' + str(r.headers))
+    log.debug('get request headers: ' + str(r.request.headers))
+    log.debug('get response headers: ' + str(r.headers))
     with open(output_path, 'wb') as out_file:
         for chunk in r.iter_content(chunk_size=1024):
             out_file.write(chunk)
