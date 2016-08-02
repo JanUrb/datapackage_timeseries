@@ -1,6 +1,9 @@
 __author__ = 'Jan'
 """
 To download the xls for Denmark, just call the download_xls_file() in the notebook.
+
+TODO: Sometimes the server returns a malformed table! Investigate if the code/request is wrong or the server code
+    is not done properly.
 """
 import requests
 from bs4 import BeautifulSoup
