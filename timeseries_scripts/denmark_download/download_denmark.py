@@ -14,7 +14,6 @@ import logging
 log = logging.getLogger('download_denmark')
 log.setLevel(logging.INFO)
 
-
 _TARGET_URL = r'http://www.energinet.dk/en/el/engrosmarked/udtraek-af-markedsdata/Sider/default.aspx?language=en'
 _REQUEST_URL = r'http://www.energinet.dk/_layouts/Markedsdata/Framework/Integrations/MarkedsdataExcelOutput.aspx'
 _POST_PARAMETER_FILE = 'post_parameter.txt'
@@ -77,9 +76,6 @@ def _download_excel(parameter, session, output_path):
 
     """
     log.info('Downloading xls file.')
-    # Specifies the data you want.
-    session.post(_REQUEST_URL, data=parameter)
-    # get excel
     header = {
         'referer': r'http://www.energinet.dk/_layouts/Markedsdata/framework/integrations/markedsdatatemplate.aspx?language=en',
         'content-type': 'application/vnd.ms-excel; charset=utf-8',
@@ -89,12 +85,19 @@ def _download_excel(parameter, session, output_path):
         'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0',
         'connection': 'keep-alive'
     }
+    # Specifies the data you want.
+    p = session.post(_REQUEST_URL, data=parameter, headers=header)
+
+    log.debug('post header: ' + str(p.headers))
 
     # Gets the data you want.
     r = session.get(_REQUEST_URL, stream=True, headers=header)
+    log.debug('header: ' + str(r.headers))
     with open(output_path, 'wb') as out_file:
-        for chunck in r.iter_content(chunk_size=1024):
-            out_file.write(chunck)
+        for chunk in r.iter_content(chunk_size=1024):
+            out_file.write(chunk)
+
+    log.info('Download completed')
 
 
 def download_xls_file(output_directory='', output_file_name='danish.xls'):
